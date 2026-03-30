@@ -1,15 +1,15 @@
-# Feishu Channel for Claude Code
+# 飞书频道 for Claude Code
 
-[中文文档](README_CN.md)
+[English](README_EN.md)
 
-Bidirectional Feishu/Lark messaging channel for [Claude Code](https://docs.anthropic.com/en/docs/claude-code), implemented as an MCP server with real-time push notifications.
+为 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 打造的飞书双向消息频道，基于 MCP 协议实现实时推送。
 
-This is the **first open-source Feishu channel** for Claude Code. It works exactly like the built-in Telegram channel: messages from Feishu are pushed into your Claude Code session in real time, and you reply through MCP tools.
+这是一个开源的飞书 Channel。它的工作方式和 Claude Code 内置的 Telegram 频道完全一致：飞书消息实时推送到 Claude Code 会话中，Claude 通过 MCP 工具回复。
 
-## How It Works
+## 工作原理
 
 ```
-Feishu App ──WebSocket──▶ lark-cli event +subscribe
+飞书 App ──WebSocket──▶ lark-cli event +subscribe
                               │
                               ▼
                      MCP Server (server.py)
@@ -25,61 +25,61 @@ Feishu App ──WebSocket──▶ lark-cli event +subscribe
                      lark-cli im +messages-send
                               │
                               ▼
-                         Feishu App
+                          飞书 App
 ```
 
-## Prerequisites
+## 环境要求
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) v2.1.87+
 - Python 3.10+
-- [lark-cli](https://github.com/riba2534/feishu-cli) (Feishu/Lark CLI tool)
-- A Feishu custom app with bot capability
+- [lark-cli](https://github.com/riba2534/feishu-cli)（飞书命令行工具）
+- 一个开启了机器人能力的飞书自建应用
 
-## Installation
+## 安装步骤
 
-### 1. Install lark-cli
+### 1. 安装 lark-cli
 
 ```bash
 npm install -g @anthropic-ai/lark-cli
-# or from source:
+# 或从源码安装：
 # git clone https://github.com/riba2534/feishu-cli.git && cd feishu-cli && npm install -g .
 ```
 
-### 2. Install Python dependencies
+### 2. 安装 Python 依赖
 
 ```bash
 pip install mcp
 ```
 
-### 3. Configure lark-cli
+### 3. 配置 lark-cli
 
 ```bash
 lark-cli config init
 ```
 
-This will prompt you to create or connect a Feishu app. Follow the link to complete authorization.
+按提示创建或关联飞书应用，打开链接完成授权。
 
-### 4. Configure your Feishu app
+### 4. 配置飞书应用
 
-In the [Feishu Open Platform console](https://open.feishu.cn):
+进入[飞书开放平台](https://open.feishu.cn)，找到你的应用：
 
-1. **Add app capability** -> Enable **Bot**
-2. **Events & Callbacks** -> Subscription method -> Select **"Use long connection to receive events"**
-3. **Add event** -> `im.message.receive_v1` (Receive messages)
-4. **Permissions** -> Enable:
-   - `im:message:receive_as_bot` (receive messages)
-   - `im:message` (send messages)
-   - `im:chat:readonly` (read chat info)
-5. **Publish** the app (Version Management -> Create version -> Publish)
+1. **添加应用能力** → 开启**机器人**
+2. **事件与回调** → 订阅方式 → 选择**"使用长连接接收事件"**
+3. **添加事件** → `im.message.receive_v1`（接收消息）
+4. **权限管理** → 开通以下权限：
+   - `im:message:receive_as_bot`（接收消息）
+   - `im:message`（发送消息）
+   - `im:chat:readonly`（读取群信息）
+5. **发布应用**（版本管理 → 创建版本 → 发布）
 
-### 5. Register the MCP server
+### 5. 注册 MCP 服务
 
 ```bash
-cd /path/to/feishu_channel
+cd /path/to/feishu-channel
 claude mcp add feishu -s project -- python3 $(pwd)/server.py
 ```
 
-This creates a `.mcp.json` in your project:
+这会在你的项目中创建 `.mcp.json`：
 
 ```json
 {
@@ -87,79 +87,79 @@ This creates a `.mcp.json` in your project:
     "feishu": {
       "type": "stdio",
       "command": "python3",
-      "args": ["/path/to/feishu_channel/server.py"]
+      "args": ["/path/to/feishu-channel/server.py"]
     }
   }
 }
 ```
 
-### 6. Start Claude Code with the Feishu channel
+### 6. 启动 Claude Code
 
 ```bash
 claude --dangerously-load-development-channels server:feishu
 ```
 
-### 7. Send a message in Feishu
+### 7. 在飞书中发消息
 
-Open your Feishu app, find the bot, and send a message. It will appear in your Claude Code session as:
+打开飞书，找到你的机器人，发一条消息。它会出现在 Claude Code 会话中：
 
 ```
-feishu · ou_xxxxx: Hello!
+feishu · ou_xxxxx: 你好！
 ```
 
-Claude will process the message and reply through the bot.
+Claude 会处理消息并通过机器人回复你。
 
-## MCP Tools
+## MCP 工具
 
-| Tool | Description |
-|------|-------------|
-| `reply` | Send a text reply to a Feishu chat. Supports threading (`reply_to`) and file attachments (`files`). |
-| `react` | Add an emoji reaction to a message (THUMBSUP, HEART, SMILE, FIRE, etc.) |
-| `edit_message` | Edit a previously sent bot message. No push notification on edit. |
+| 工具 | 说明 |
+|------|------|
+| `reply` | 回复飞书消息。支持引用回复（`reply_to`）和文件附件（`files`）。 |
+| `react` | 给消息添加表情回应（THUMBSUP、HEART、SMILE、FIRE 等） |
+| `edit_message` | 编辑机器人之前发送的消息。编辑不会触发推送通知。 |
 
-## Message Format
+## 消息格式
 
-Inbound messages arrive as channel notifications:
+收到的飞书消息以频道通知的形式出现：
 
 ```xml
 <channel source="feishu" chat_id="oc_xxx" message_id="om_xxx" user="ou_xxx" ts="2025-01-01T00:00:00+00:00">
-  Hello from Feishu!
+  你好！
 </channel>
 ```
 
-## Architecture
+## 架构说明
 
-The server uses three key mechanisms:
+服务端使用三个关键机制：
 
-1. **WebSocket event subscription**: `lark-cli event +subscribe` maintains a persistent WebSocket connection to Feishu's event gateway. No public IP or webhook endpoint needed.
+1. **WebSocket 事件订阅**：`lark-cli event +subscribe` 通过 WebSocket 长连接接收飞书事件。不需要公网 IP，不需要配置 Webhook。
 
-2. **MCP channel notifications**: When a message arrives, the server pushes it to Claude Code via `notifications/claude/channel` — the same protocol the built-in Telegram channel uses.
+2. **MCP 频道通知**：收到消息后，通过 `notifications/claude/channel` 推送到 Claude Code —— 和内置 Telegram 频道使用相同的协议。
 
-3. **lark-cli IM shortcuts**: Outbound messages use `lark-cli im +messages-send` and `+messages-reply` for reliable delivery.
+3. **lark-cli IM 快捷命令**：发送消息使用 `lark-cli im +messages-send` 和 `+messages-reply`，稳定可靠。
 
-## Troubleshooting
+## 常见问题
 
-### Messages not arriving
+### 收不到消息
 
-1. Check the bot has `im:message:receive_as_bot` permission
-2. Ensure "Use long connection to receive events" is selected in the console
-3. Verify `im.message.receive_v1` event is subscribed
-4. Make sure the app is published (not just saved)
+1. 确认机器人有 `im:message:receive_as_bot` 权限
+2. 确认事件订阅方式选择了"使用长连接接收事件"
+3. 确认已订阅 `im.message.receive_v1` 事件
+4. 确认应用已发布（不只是保存）
 
-### Bot not replying
+### 机器人不回复
 
-1. Check the bot has `im:message` (send message) permission
-2. Test manually: `lark-cli im +messages-send --chat-id oc_xxx --text "test" --as bot`
+1. 确认机器人有 `im:message`（发送消息）权限
+2. 手动测试：`lark-cli im +messages-send --chat-id oc_xxx --text "测试" --as bot`
 
-### Channel not loading
+### 频道无法加载
 
-The `--dangerously-load-development-channels` flag is required for non-marketplace MCP servers. This is a Claude Code security feature.
+非 marketplace 的 MCP 服务需要 `--dangerously-load-development-channels` 标志，这是 Claude Code 的安全机制。
 
 ```bash
-# Correct:
+# 正确：
 claude --dangerously-load-development-channels server:feishu
 
-# Wrong (will show warning but not load):
+# 错误（会显示警告但不会加载）：
 claude --channels server:feishu
 ```
 
