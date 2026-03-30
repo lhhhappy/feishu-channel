@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "feishu": {
+      "type": "stdio",
+      "command": "python3",
+      "args": ["server.py"]
+    }
+  }
+}
