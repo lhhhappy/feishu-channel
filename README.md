@@ -1,5 +1,7 @@
 # Feishu Channel for Claude Code
 
+[中文文档](README_CN.md)
+
 Bidirectional Feishu/Lark messaging channel for [Claude Code](https://docs.anthropic.com/en/docs/claude-code), implemented as an MCP server with real-time push notifications.
 
 This is the **first open-source Feishu channel** for Claude Code. It works exactly like the built-in Telegram channel: messages from Feishu are pushed into your Claude Code session in real time, and you reply through MCP tools.
