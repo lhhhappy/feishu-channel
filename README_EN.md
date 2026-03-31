@@ -32,7 +32,7 @@ Feishu App ──WebSocket──▶ lark-cli event +subscribe
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) v2.1.87+
 - Python 3.10+
-- [lark-cli](https://github.com/riba2534/feishu-cli) (Feishu/Lark CLI tool)
+- [lark-cli](https://www.npmjs.com/package/@larksuite/cli) (Feishu/Lark CLI tool)
 - A Feishu custom app with bot capability
 
 ## Installation
@@ -40,9 +40,8 @@ Feishu App ──WebSocket──▶ lark-cli event +subscribe
 ### 1. Install lark-cli
 
 ```bash
-npm install -g @anthropic-ai/lark-cli
-# or from source:
-# git clone https://github.com/riba2534/feishu-cli.git && cd feishu-cli && npm install -g .
+npm install -g @larksuite/cli
+npx skills add larksuite/cli -y -g
 ```
 
 ### 2. Install Python dependencies

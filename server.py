@@ -13,7 +13,7 @@ Architecture:
 Requirements:
   - Python 3.10+
   - mcp (pip install mcp)
-  - lark-cli (npm install -g @anthropic-ai/lark-cli, or see README)
+  - lark-cli (npm install -g @larksuite/cli && npx skills add larksuite/cli -y -g)
 
 Usage:
   1. Configure lark-cli:  lark-cli config init

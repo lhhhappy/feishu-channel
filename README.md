@@ -32,7 +32,7 @@
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) v2.1.87+
 - Python 3.10+
-- [lark-cli](https://github.com/riba2534/feishu-cli)（飞书命令行工具）
+- [lark-cli](https://www.npmjs.com/package/@larksuite/cli)（飞书命令行工具）
 - 一个开启了机器人能力的飞书自建应用
 
 ## 安装步骤
@@ -40,9 +40,8 @@
 ### 1. 安装 lark-cli
 
 ```bash
-npm install -g @anthropic-ai/lark-cli
-# 或从源码安装：
-# git clone https://github.com/riba2534/feishu-cli.git && cd feishu-cli && npm install -g .
+npm install -g @larksuite/cli
+npx skills add larksuite/cli -y -g
 ```
 
 ### 2. 安装 Python 依赖
